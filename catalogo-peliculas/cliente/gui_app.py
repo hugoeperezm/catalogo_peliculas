@@ -56,15 +56,19 @@ class Frame(tk.Frame):
         # Entrys de cada campo
         self.entry_nombre = tk.Entry(self)
         self.entry_nombre.config(width=50, state='disable', font=('Arial', 12))
-        self.entry_nombre.grid(row=0, column=1, padx=10, pady=10)
+        # Los entrys están ocupando una sola columna en el grid. Para que ocupe dos columnas,
+        # se agrega la propiedad: columnspan=2
+        # self.entry_nombre.grid(row=0, column=1, padx=10, pady=10)
+        self.entry_nombre.grid(row=0, column=1, padx=10, pady=10, columnspan=2)
+
 
         self.entry_duracion = tk.Entry(self)
         self.entry_duracion.config(width=50, state='disable', font=('Arial', 12))
-        self.entry_duracion.grid(row=1, column=1, padx=10, pady=10)
+        self.entry_duracion.grid(row=1, column=1, padx=10, pady=10, columnspan=2)
 
         self.entry_genero = tk.Entry(self)
         self.entry_genero.config(width=50, state='disable', font=('Arial', 12))
-        self.entry_genero.grid(row=2, column=1, padx=10, pady=10)
+        self.entry_genero.grid(row=2, column=1, padx=10, pady=10, columnspan=2)
 
         # Botones de Nuevo registro, ...
         # en la pagina https://htmlcolorcodes.com/es se puede obtener los codigos de los colores
