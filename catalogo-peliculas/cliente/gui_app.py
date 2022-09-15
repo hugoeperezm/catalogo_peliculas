@@ -2,8 +2,12 @@
 # 1. Se importa el modulo tkinter
 # 2. Se define la clase Frame
 # 3. Se crear la barra de mnú con las diferentes menus y opciones
+# 4. Se crea los labels (3) los Entry (3) y los botones (3)
+# 5. Se aplica funcionalidad de habilitar y deshabilitar de acuerdo a las reglas
+# 6. Se Crear un TreeView para mostrar los datos como una tabla de datos
 
 import tkinter as tk
+from tkinter import ttk
 
 
 def barra_menu(root):
@@ -39,6 +43,8 @@ class Frame(tk.Frame):
         # self.label_nombre = None
         self.campos_pelicula()
         self.deshabilitar_campos()
+        self.tabla_peliculas()
+
 
     def campos_pelicula(self):
         # Labels de cada campo donde muestra los campos
@@ -83,19 +89,19 @@ class Frame(tk.Frame):
         self.boton_nuevo.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#158645',
                                 cursor='hand2', activebackground='#35BD6F')
-        self.boton_nuevo.grid(row=4, column=0, padx=10, pady=10)
+        self.boton_nuevo.grid(row=3, column=0, padx=10, pady=10)
 
         self.boton_guardar = tk.Button(self, text="Guardar", command=self.deshabilitar_campos)
         self.boton_guardar.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#1658A2',
                                 cursor='hand2', activebackground='#3586DF')
-        self.boton_guardar.grid(row=4, column=1, padx=10, pady=10)
+        self.boton_guardar.grid(row=3, column=1, padx=10, pady=10)
 
         self.boton_cancelar = tk.Button(self, text="Cancelar", command=self.deshabilitar_campos)
         self.boton_cancelar.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#BD152E',
                                 cursor='hand2', activebackground='#E15370')
-        self.boton_cancelar.grid(row=4, column=2, padx=10, pady=10)
+        self.boton_cancelar.grid(row=3, column=2, padx=10, pady=10)
 
     def habilitar_campos(self):
         # En segundo lugarse va a enviar un valor vacio a los entry
@@ -126,5 +132,42 @@ class Frame(tk.Frame):
         self.boton_cancelar.config(state='disabled')
 
     def guardar_datos(self):
+
         # Se deshabilitan los campos
         self.deshabilitar_campos()
+
+    def tabla_peliculas(self):
+        '''En este nuevo paso, se crea una tabla tipo TreeView de ttk, con 4 columnas.
+        Para ello, se debe importar la libreria ttk de TKinter
+        y corregir la posicion de los botones a la fila 3'''
+
+        self.tabla = ttk.Treeview(self,
+                                  column= ('Nombre', 'Duracion', 'Genero'))
+        self.tabla.grid(row=4, column=0, columnspan=4)
+
+        self.tabla.heading('#0', text='ID')
+        self.tabla.heading('#1', text='NOMBRE')
+        self.tabla.heading('#2', text='DURACION')
+        self.tabla.heading('#3', text='GENERO')
+
+        # INSERTAR A LA TABLA UN VALOR DUMMY
+        # A la raiz se le envia vacio
+        # Al indice se le envía 0
+        # Al texto se le envía el ID con valor 1
+        # y se envia los valores de la columna en una tupla
+        self.tabla.insert('', 0, text='1',
+                          values=('Los Vengadores', '2.35', 'Accion'))
+
+        # Se crean los botones finales para controlar la data de la tabla (TreeView)
+        # en la pagina https://htmlcolorcodes.com/es se puede obtener los codigos de los colores
+        self.boton_editar = tk.Button(self, text="Editar")
+        self.boton_editar.config(width=20, font=('Arial', 12, 'bold'),
+                                fg='#DAD5D6', bg='#158645',
+                                cursor='hand2', activebackground='#35BD6F')
+        self.boton_editar.grid(row=5, column=0, padx=10, pady=10)
+
+        self.boton_eliminar = tk.Button(self, text="Eliminar")
+        self.boton_eliminar.config(width=20, font=('Arial', 12, 'bold'),
+                                   fg='#DAD5D6', bg='#BD152E',
+                                   cursor='hand2', activebackground='#E15370')
+        self.boton_eliminar.grid(row=5, column=1, padx=10, pady=10)
