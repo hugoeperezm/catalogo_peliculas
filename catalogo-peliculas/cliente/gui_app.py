@@ -38,6 +38,7 @@ class Frame(tk.Frame):
         # self.config(bg='green')
         # self.label_nombre = None
         self.campos_pelicula()
+        self.deshabilitar_campos()
 
     def campos_pelicula(self):
         # Labels de cada campo donde muestra los campos
@@ -54,39 +55,76 @@ class Frame(tk.Frame):
         self.label_genero.grid(row=2, column=0, padx=10, pady=10)
 
         # Entrys de cada campo
-        self.entry_nombre = tk.Entry(self)
-        self.entry_nombre.config(width=50, state='disable', font=('Arial', 12))
+        # Ahora se va a agregar una var tk.StringVar() y el config textvariable
+        # para poder borrar el contenido de un Entry
+        self.mi_nombre = tk.StringVar()
+        self.entry_nombre = tk.Entry(self, textvariable=self.mi_nombre)
+        self.entry_nombre.config(width=50, font=('Arial', 12))
         # Los entrys están ocupando una sola columna en el grid. Para que ocupe dos columnas,
         # se agrega la propiedad: columnspan=2
         # self.entry_nombre.grid(row=0, column=1, padx=10, pady=10)
         self.entry_nombre.grid(row=0, column=1, padx=10, pady=10, columnspan=2)
 
-
-        self.entry_duracion = tk.Entry(self)
-        self.entry_duracion.config(width=50, state='disable', font=('Arial', 12))
+        # En este punto se quita las config state='disabled', porque se va a manejar con dos funciones
+        # deshabilitar_campos() y habilitar_campos()
+        self.mi_duracion = tk.StringVar()
+        self.entry_duracion = tk.Entry(self, textvariable=self.mi_duracion)
+        self.entry_duracion.config(width=50, font=('Arial', 12))
         self.entry_duracion.grid(row=1, column=1, padx=10, pady=10, columnspan=2)
 
-        self.entry_genero = tk.Entry(self)
-        self.entry_genero.config(width=50, state='disable', font=('Arial', 12))
+        self.mi_genero = tk.StringVar()
+        self.entry_genero = tk.Entry(self, textvariable=self.mi_genero)
+        self.entry_genero.config(width=50, font=('Arial', 12))
         self.entry_genero.grid(row=2, column=1, padx=10, pady=10, columnspan=2)
 
         # Botones de Nuevo registro, ...
         # en la pagina https://htmlcolorcodes.com/es se puede obtener los codigos de los colores
-        self.boton_nuevo = tk.Button(self, text="Nuevo")
+        self.boton_nuevo = tk.Button(self, text="Nuevo", command=self.habilitar_campos)
         self.boton_nuevo.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#158645',
                                 cursor='hand2', activebackground='#35BD6F')
         self.boton_nuevo.grid(row=4, column=0, padx=10, pady=10)
 
-        self.boton_guardar = tk.Button(self, text="Guardar")
+        self.boton_guardar = tk.Button(self, text="Guardar", command=self.deshabilitar_campos)
         self.boton_guardar.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#1658A2',
                                 cursor='hand2', activebackground='#3586DF')
         self.boton_guardar.grid(row=4, column=1, padx=10, pady=10)
 
-        self.boton_cancelar = tk.Button(self, text="Cancelar")
+        self.boton_cancelar = tk.Button(self, text="Cancelar", command=self.deshabilitar_campos)
         self.boton_cancelar.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#BD152E',
                                 cursor='hand2', activebackground='#E15370')
         self.boton_cancelar.grid(row=4, column=2, padx=10, pady=10)
 
+    def habilitar_campos(self):
+        # En segundo lugarse va a enviar un valor vacio a los entry
+        self.mi_nombre.set('')
+        self.mi_duracion.set('')
+        self.mi_genero.set('')
+
+        # En primer lugar se va a habilitar la config de los botones
+        self.entry_nombre.config(state='normal')
+        self.entry_duracion.config(state='normal')
+        self.entry_genero.config(state='normal')
+
+        self.boton_guardar.config(state='normal')
+        self.boton_cancelar.config(state='normal')
+
+    def deshabilitar_campos(self):
+        # En segundo lugarse va a enviar un valor vacio a los entry
+        self.mi_nombre.set('')
+        self.mi_duracion.set('')
+        self.mi_genero.set('')
+
+        # En primer lugar se va a deshabilitar la config de los botones
+        self.entry_nombre.config(state='disabled')
+        self.entry_duracion.config(state='disabled')
+        self.entry_genero.config(state='disabled')
+
+        self.boton_guardar.config(state='disabled')
+        self.boton_cancelar.config(state='disabled')
+
+    def guardar_datos(self):
+        # Se deshabilitan los campos
+        self.deshabilitar_campos()
