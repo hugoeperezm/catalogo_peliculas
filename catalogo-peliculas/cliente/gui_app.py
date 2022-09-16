@@ -6,12 +6,14 @@
 # 5. Se aplica funcionalidad de habilitar y deshabilitar de acuerdo a las reglas
 # 6. Se Crear un TreeView para mostrar los datos como una tabla de datos
 # 7. Crear paquete model y database para crear tabla y eliminar tabla.
-#    Adicionar comando adicionar registro a la bd y eliminar registro a la bd en las opciones del menu
+#    Crear comando adicionar registro a la bd y eliminar registro a la bd en las opciones del menu
+# 8. Crear
 
 
 import tkinter as tk
 from tkinter import ttk
 from model.pelicula_dao import crear_tabla, borrar_tabla
+from model.pelicula_dao import Pelicula, guardar
 
 
 def barra_menu(root):
@@ -137,6 +139,14 @@ class Frame(tk.Frame):
 
     def guardar_datos(self):
 
+        pelicula = Pelicula(
+            self.mi_nombre.get(),
+            self.mi_duracion.get(),
+            self.mi_genero.get()
+        )
+
+        guardar(pelicula)
+
         # Se deshabilitan los campos
         self.deshabilitar_campos()
 
@@ -161,6 +171,9 @@ class Frame(tk.Frame):
         # y se envia los valores de la columna en una tupla
         self.tabla.insert('', 0, text='1',
                           values=('Los Vengadores', '2.35', 'Accion'))
+
+        self.tabla.insert('', 1, text='2',
+                          values=('Juego de Tronos', '2.15', 'Ciencia Ficcion'))
 
         # Se crean los botones finales para controlar la data de la tabla (TreeView)
         # en la pagina https://htmlcolorcodes.com/es se puede obtener los codigos de los colores

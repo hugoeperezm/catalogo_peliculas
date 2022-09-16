@@ -10,7 +10,7 @@ class ConexionDB:
             self.conexion = pymysql.connect(host='localhost',
                                             user='root',
                                             password='Training2017*',
-                                            db='peliculas')
+                                            db='peliculadb')
             # Se crea un cursor para realizar operaciones sobre a base de datos
             self.cursor = self.conexion.cursor()
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:

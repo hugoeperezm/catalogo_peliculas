@@ -42,7 +42,28 @@ def borrar_tabla():
         messagebox.showwarning(titulo, mensaje)
 
 
-def crear_basedatos():
-    pass
+class Pelicula:
+    def __init__(self, nombre, duracion, genero):
+        self.id_pelicula = None
+        self.nombre = nombre
+        self.duracion = duracion
+        self.genero = genero
 
+    def __str__(self):
+        return f'Pelicula[{self.nombre}, {self.duracion}, {self.genero}]'
+
+def guardar(pelicula):
+    conexion = ConexionDB()
+
+    titulo = 'Conexion al Registro'
+    mensaje = 'La tabla peliculas no está creada en la base de datos'
+
+    sql = f"""INSERT INTO peliculas (nombre, duracion, genero)
+                VALUES('{pelicula.nombre}', '{pelicula.duracion}', '{pelicula.genero}')"""
+
+    try:
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+    except:
+        messagebox.showerror(titulo, mensaje)
 
