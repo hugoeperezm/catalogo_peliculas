@@ -5,9 +5,13 @@
 # 4. Se crea los labels (3) los Entry (3) y los botones (3)
 # 5. Se aplica funcionalidad de habilitar y deshabilitar de acuerdo a las reglas
 # 6. Se Crear un TreeView para mostrar los datos como una tabla de datos
+# 7. Crear paquete model y database para crear tabla y eliminar tabla.
+#    Adicionar comando adicionar registro a la bd y eliminar registro a la bd en las opciones del menu
+
 
 import tkinter as tk
 from tkinter import ttk
+from model.pelicula_dao import crear_tabla, borrar_tabla
 
 
 def barra_menu(root):
@@ -22,8 +26,8 @@ def barra_menu(root):
     barra_menu.add_cascade(label='Archivo', menu=menu_inicio)
 
     # Se adiciona cada comando o cada opcion del menu Archivo
-    menu_inicio.add_command(label='Crear registro en DB')
-    menu_inicio.add_command(label='Eliminar registro en DB')
+    menu_inicio.add_command(label='Crear registro en DB', command=crear_tabla)
+    menu_inicio.add_command(label='Eliminar registro en DB', command=borrar_tabla)
     menu_inicio.add_command(label='Salir', command=root.destroy)
 
     barra_menu.add_cascade(label='Consultas')
