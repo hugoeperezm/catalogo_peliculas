@@ -3,6 +3,16 @@ import pymysql
 
 
 class ConexionDB:
+    sql = '''
+                CREATE TABLE peliculas(
+                    id_pelicula INTEGER AUTO_INCREMENT NOT NULL,
+                    nombre VARCHAR(100),
+                    duracion VARCHAR(10),
+                    genero VARCHAR(100),
+                    PRIMARY KEY(id_pelicula)
+                )
+                '''
+
     # contructor de la clase
     def __init__(self):
         # se conecta a la base de datos (archivo de sqlite), en caso que no exista, la crea.
@@ -24,3 +34,4 @@ class ConexionDB:
 
     def crear_basedatos(self):
         pass
+

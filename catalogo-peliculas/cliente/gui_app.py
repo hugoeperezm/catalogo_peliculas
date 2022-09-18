@@ -40,9 +40,13 @@ def barra_menu(root):
 class Frame(tk.Frame):
     # Esta clase espera un frame none y se define el self
     # y el root que recibe desde el modulo principal
-    def __init__(self, root = None):
+    def __init__(self, root=None):
         # Heredar el constructor de la clase padre y recibe la raiz y la configuracion
         super().__init__(root, width=480, height=320)
+        self.tabla = None
+        self.label_genero = None
+        self.label_duracion = None
+        self.label_nombre = None
         self.root = root
         self.pack()
         # self.config(bg='green')
@@ -51,16 +55,15 @@ class Frame(tk.Frame):
         self.deshabilitar_campos()
         self.tabla_peliculas()
 
-
     def campos_pelicula(self):
         # Labels de cada campo donde muestra los campos
         self.label_nombre = tk.Label(self, text='Nombre: ')
         self.label_nombre.config(font=('Arial', 12, 'bold'))
         self.label_nombre.grid(row=0, column=0, padx=10, pady=10)
 
-        self.label_duración = tk.Label(self, text='Duración: ')
-        self.label_duración.config(font=('Arial', 12, 'bold'))
-        self.label_duración.grid(row=1, column=0, padx=10, pady=10)
+        self.label_duracion = tk.Label(self, text='Duración: ')
+        self.label_duracion.config(font=('Arial', 12, 'bold'))
+        self.label_duracion.grid(row=1, column=0, padx=10, pady=10)
 
         self.label_genero = tk.Label(self, text='Género: ')
         self.label_genero.config(font=('Arial', 12, 'bold'))
@@ -97,7 +100,7 @@ class Frame(tk.Frame):
                                 cursor='hand2', activebackground='#35BD6F')
         self.boton_nuevo.grid(row=3, column=0, padx=10, pady=10)
 
-        self.boton_guardar = tk.Button(self, text="Guardar", command=self.deshabilitar_campos)
+        self.boton_guardar = tk.Button(self, text="Guardar", command=self.guardar_datos)
         self.boton_guardar.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#1658A2',
                                 cursor='hand2', activebackground='#3586DF')
@@ -156,7 +159,7 @@ class Frame(tk.Frame):
         y corregir la posicion de los botones a la fila 3'''
 
         self.tabla = ttk.Treeview(self,
-                                  column= ('Nombre', 'Duracion', 'Genero'))
+                                  column=('Nombre', 'Duracion', 'Genero'))
         self.tabla.grid(row=4, column=0, columnspan=4)
 
         self.tabla.heading('#0', text='ID')

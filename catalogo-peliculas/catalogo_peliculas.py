@@ -7,9 +7,9 @@ def main():
     # Clase que crea la interfaz
     root = tk.Tk()
     root.title('Catalogo peliculas')
-    # root.iconbitmap('img/logo_python.ico')
+    # root.iconbitmap('logo_python.ico')
     # print(os.path.realpath(__file__))
-    # root.resizable(0, 0)  # Se comenta temporalmente mientras se diseña
+    root.resizable(0, 0)  # Se comenta temporalmente mientras se diseña
     barra_menu(root)
 
     # Se reemplaza estas instrucciones por el modulo creado de gui_app.py

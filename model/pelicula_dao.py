@@ -1,44 +1,66 @@
 # este archivo crea los objetos de la base de datos: tablas
 # Por encontrarse en el mismo paquete, puede usarse el punto (.conexion_sqlite_db)
-
-from .conexion_mysql_db import ConexionDB
+import sqlite3
+from .conexion_sqlite_db import ConexionDB #, sql_tabla_peliculas
+# from .conexion_mysql_db import ConexionDB, sql_tabla_peliculas
 from tkinter import messagebox
 
 
 def crear_tabla():
-    conexion = ConexionDB()
+    # conexion = ConexionDB()  --la llamada a la conexion se controla con el try
     titulo = 'Crear Tabla'
-    sql = '''
-    CREATE TABLE peliculas(
-        id_pelicula INTEGER AUTO_INCREMENT NOT NULL,
-        nombre VARCHAR(100),
-        duracion VARCHAR(10),
-        genero VARCHAR(100),
-        PRIMARY KEY(id_pelicula)
-    )
-    '''
+    sql = ConexionDB.sql
+    # sql = '''
+    #         CREATE TABLE peliculas(
+    #             id_pelicula INTEGER NOT NULL,
+    #             nombre VARCHAR(100),
+    #             duracion VARCHAR(10),
+    #             genero VARCHAR(100),
+    #             PRIMARY KEY(id_pelicula AUTOINCREMENT)
+    #         )
+    #         '''
     try:
+        conexion = ConexionDB()
         conexion.cursor.execute(sql)
         conexion.cerrar()
-        mensaje = 'Se creó la tabla en la base de datos'
+        mensaje = f'Se creó la tabla en la base de datos "{ConexionDB.database_path}".'
         messagebox.showwarning(titulo, mensaje)
-    except:
-        mensaje = 'La tabla ya está creada'
+    except sqlite3.OperationalError as err:
+        mensaje = f'No se ha podido abrir la base de datos "{ConexionDB.database_path}".' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except sqlite3.ProgrammingError as err:
+        mensaje = f'La tabla ya está creada.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except BaseException as err:
+        mensaje = f'Se ha presentado un error desconocido.' \
+                  f'\n\nDescripcion del error : {err}'
         messagebox.showwarning(titulo, mensaje)
 
 
 def borrar_tabla():
-    conexion = ConexionDB()
+    # conexion = ConexionDB()
 
     titulo = 'Borrar Tabla'
     sql = 'DROP TABLE peliculas'
     try:
+        conexion = ConexionDB()
         conexion.cursor.execute(sql)
         conexion.cerrar()
         mensaje = 'Se borró la tabla con éxito'
         messagebox.showwarning(titulo, mensaje)
-    except:
-        mensaje = 'No hay tabla para borrar'
+    except sqlite3.OperationalError as err:
+        mensaje = f'No se ha podido abrir la base de datos.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except sqlite3.ProgrammingError as err:
+        mensaje = f'No hay tablas para borrar.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except BaseException as err:
+        mensaje = f'Se ha presentado un error desconocido.' \
+                  f'\n\nDescripcion del error : {err}'
         messagebox.showwarning(titulo, mensaje)
 
 
