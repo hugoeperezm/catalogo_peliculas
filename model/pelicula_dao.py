@@ -75,7 +75,6 @@ class Pelicula:
         return f'Pelicula[{self.nombre}, {self.duracion}, {self.genero}]'
 
 def guardar(pelicula):
-    conexion = ConexionDB()
 
     titulo = 'Conexion al Registro'
     mensaje = 'La tabla peliculas no está creada en la base de datos'
@@ -84,8 +83,34 @@ def guardar(pelicula):
                 VALUES('{pelicula.nombre}', '{pelicula.duracion}', '{pelicula.genero}')"""
 
     try:
+        conexion = ConexionDB()
         conexion.cursor.execute(sql)
         conexion.cerrar()
-    except:
+    except sqlite3.ProgrammingError as err:
+        mensaje = f'La tabla ya está creada.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except BaseException as err:
         messagebox.showerror(titulo, mensaje)
+
+
+def listar():
+    lista_peliculas = []
+    sql = 'SELECT id_pelicula, nombre, duracion, genero FROM peliculas'
+    titulo = 'Conexion al Registro'
+    mensaje = 'La tabla peliculas no está creada en la base de datos'
+
+    try:
+        conexion = ConexionDB()
+        conexion.cursor.execute(sql)
+        lista_peliculas = conexion.cursor.fetchall()
+        conexion.cerrar()
+    except sqlite3.ProgrammingError as err:
+        mensaje = f'La tabla ya está creada.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except BaseException as err:
+        messagebox.showerror(titulo, mensaje)
+
+    return lista_peliculas
 

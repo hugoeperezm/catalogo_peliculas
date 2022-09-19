@@ -13,7 +13,7 @@
 import tkinter as tk
 from tkinter import ttk
 from model.pelicula_dao import crear_tabla, borrar_tabla
-from model.pelicula_dao import Pelicula, guardar
+from model.pelicula_dao import Pelicula, guardar, listar
 
 
 def barra_menu(root):
@@ -149,15 +149,17 @@ class Frame(tk.Frame):
         )
 
         guardar(pelicula)
+        self.tabla_peliculas()
 
         # Se deshabilitan los campos
         self.deshabilitar_campos()
 
     def tabla_peliculas(self):
-        '''En este nuevo paso, se crea una tabla tipo TreeView de ttk, con 4 columnas.
-        Para ello, se debe importar la libreria ttk de TKinter
-        y corregir la posicion de los botones a la fila 3'''
+        # Recuperar la lista de peliculas
+        self.lista_peliculas = listar()
+        self.lista_peliculas.reverse()
 
+        # se crea una tabla tipo TreeView de ttk, con 4 columnas, importar la libreria ttk de TKinter
         self.tabla = ttk.Treeview(self,
                                   column=('Nombre', 'Duracion', 'Genero'))
         self.tabla.grid(row=4, column=0, columnspan=4)
@@ -167,16 +169,11 @@ class Frame(tk.Frame):
         self.tabla.heading('#2', text='DURACION')
         self.tabla.heading('#3', text='GENERO')
 
-        # INSERTAR A LA TABLA UN VALOR DUMMY
-        # A la raiz se le envia vacio
-        # Al indice se le envía 0
-        # Al texto se le envía el ID con valor 1
-        # y se envia los valores de la columna en una tupla
-        self.tabla.insert('', 0, text='1',
-                          values=('Los Vengadores', '2.35', 'Accion'))
+        for p in self.lista_peliculas:
+            self.tabla.insert('', 0, text=p[0],
+                              values=(p[1], p[2], p[3]))
 
-        self.tabla.insert('', 1, text='2',
-                          values=('Juego de Tronos', '2.15', 'Ciencia Ficcion'))
+
 
         # Se crean los botones finales para controlar la data de la tabla (TreeView)
         # en la pagina https://htmlcolorcodes.com/es se puede obtener los codigos de los colores
