@@ -10,15 +10,6 @@ def crear_tabla():
     # conexion = ConexionDB()  --la llamada a la conexion se controla con el try
     titulo = 'Crear Tabla'
     sql = ConexionDB.sql
-    # sql = '''
-    #         CREATE TABLE peliculas(
-    #             id_pelicula INTEGER NOT NULL,
-    #             nombre VARCHAR(100),
-    #             duracion VARCHAR(10),
-    #             genero VARCHAR(100),
-    #             PRIMARY KEY(id_pelicula AUTOINCREMENT)
-    #         )
-    #         '''
     try:
         conexion = ConexionDB()
         conexion.cursor.execute(sql)
@@ -87,7 +78,7 @@ def guardar(pelicula):
         conexion.cursor.execute(sql)
         conexion.cerrar()
     except sqlite3.ProgrammingError as err:
-        mensaje = f'La tabla ya está creada.' \
+        mensaje = f'La pelicula no se pudo guardar.' \
                   f'\n\nDescripcion del error : {err}'
         messagebox.showwarning(titulo, mensaje)
     except BaseException as err:
@@ -106,11 +97,49 @@ def listar():
         lista_peliculas = conexion.cursor.fetchall()
         conexion.cerrar()
     except sqlite3.ProgrammingError as err:
-        mensaje = f'La tabla ya está creada.' \
+        mensaje = f'No se pudo consultar las peliculas.' \
                   f'\n\nDescripcion del error : {err}'
         messagebox.showwarning(titulo, mensaje)
     except BaseException as err:
-        messagebox.showerror(titulo, mensaje)
+            messagebox.showerror(titulo, mensaje)
 
     return lista_peliculas
 
+
+def editar(pelicula, id_pelicula):
+    titulo = 'Edicion de peliculas'
+
+    sql = f"""UPDATE peliculas SET
+                nombre = '{pelicula.nombre}', 
+                duracion = '{pelicula.duracion}', 
+                genero = '{pelicula.genero}'
+              WHERE id_pelicula = {id_pelicula}"""
+
+    try:
+        conexion = ConexionDB()
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+    except sqlite3.ProgrammingError as err:
+        mensaje = f'La pelicula no se pudo editar.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except BaseException as err:
+        mensaje = f'Descripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+
+
+def eliminar(id_pelicula):
+    titulo = 'Borrado de peliculas'
+    sql = f'DELETE FROM peliculas WHERE id_pelicula = {id_pelicula}'
+
+    try:
+        conexion = ConexionDB()
+        conexion.cursor.execute(sql)
+        conexion.cerrar()
+    except sqlite3.ProgrammingError as err:
+        mensaje = f'La pelicula no se pudo eliminar.' \
+                  f'\n\nDescripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)
+    except BaseException as err:
+        mensaje = f'Descripcion del error : {err}'
+        messagebox.showwarning(titulo, mensaje)

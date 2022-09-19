@@ -11,9 +11,9 @@
 
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from model.pelicula_dao import crear_tabla, borrar_tabla
-from model.pelicula_dao import Pelicula, guardar, listar
+from model.pelicula_dao import Pelicula, guardar, listar, editar, eliminar
 
 
 def barra_menu(root):
@@ -49,6 +49,7 @@ class Frame(tk.Frame):
         self.label_nombre = None
         self.root = root
         self.pack()
+        self.id_pelicula = None
         # self.config(bg='green')
         # self.label_nombre = None
         self.campos_pelicula()
@@ -127,6 +128,7 @@ class Frame(tk.Frame):
         self.boton_cancelar.config(state='normal')
 
     def deshabilitar_campos(self):
+        self.id_pelicula = None
         # En segundo lugarse va a enviar un valor vacio a los entry
         self.mi_nombre.set('')
         self.mi_duracion.set('')
@@ -141,18 +143,26 @@ class Frame(tk.Frame):
         self.boton_cancelar.config(state='disabled')
 
     def guardar_datos(self):
+        titulo = 'Edicion de peliculas'
+        try:
+            pelicula = Pelicula(
+                self.mi_nombre.get(),
+                self.mi_duracion.get(),
+                self.mi_genero.get()
+            )
 
-        pelicula = Pelicula(
-            self.mi_nombre.get(),
-            self.mi_duracion.get(),
-            self.mi_genero.get()
-        )
+            if self.id_pelicula == None:
+                guardar(pelicula)
+            else:
+                editar(pelicula, self.id_pelicula)
 
-        guardar(pelicula)
-        self.tabla_peliculas()
+            self.tabla_peliculas()
 
-        # Se deshabilitan los campos
-        self.deshabilitar_campos()
+            # Se deshabilitan los campos
+            self.deshabilitar_campos()
+        except BaseException as err:
+            mensaje = f'Descripcion del error : {err}'
+            messagebox.showwarning(titulo, mensaje)
 
     def tabla_peliculas(self):
         # Recuperar la lista de peliculas
@@ -162,29 +172,64 @@ class Frame(tk.Frame):
         # se crea una tabla tipo TreeView de ttk, con 4 columnas, importar la libreria ttk de TKinter
         self.tabla = ttk.Treeview(self,
                                   column=('Nombre', 'Duracion', 'Genero'))
-        self.tabla.grid(row=4, column=0, columnspan=4)
+        self.tabla.grid(row=4, column=0, columnspan=4, sticky='nse')
+
+        # Scroll bar para la tabla si excede los registros
+        self.scroll = ttk.Scrollbar(self,
+                                    orient='vertical', command=self.tabla.yview)
+        self.scroll.grid(row=4, column=4, sticky='nse')
+        self.tabla.configure(yscrollcommand=self.scroll.set)
 
         self.tabla.heading('#0', text='ID')
         self.tabla.heading('#1', text='NOMBRE')
         self.tabla.heading('#2', text='DURACION')
         self.tabla.heading('#3', text='GENERO')
 
+        # Iterar la lista de peliculas
         for p in self.lista_peliculas:
             self.tabla.insert('', 0, text=p[0],
                               values=(p[1], p[2], p[3]))
 
 
-
         # Se crean los botones finales para controlar la data de la tabla (TreeView)
         # en la pagina https://htmlcolorcodes.com/es se puede obtener los codigos de los colores
-        self.boton_editar = tk.Button(self, text="Editar")
+        self.boton_editar = tk.Button(self, text="Editar", command=self.editar_datos)
         self.boton_editar.config(width=20, font=('Arial', 12, 'bold'),
                                 fg='#DAD5D6', bg='#158645',
                                 cursor='hand2', activebackground='#35BD6F')
         self.boton_editar.grid(row=5, column=0, padx=10, pady=10)
 
-        self.boton_eliminar = tk.Button(self, text="Eliminar")
+        self.boton_eliminar = tk.Button(self, text="Eliminar", command=self.eliminar_datos)
         self.boton_eliminar.config(width=20, font=('Arial', 12, 'bold'),
                                    fg='#DAD5D6', bg='#BD152E',
                                    cursor='hand2', activebackground='#E15370')
         self.boton_eliminar.grid(row=5, column=1, padx=10, pady=10)
+
+    def editar_datos(self):
+        titulo = 'Edicion de peliculas'
+        try:
+            self.id_pelicula = self.tabla.item(self.tabla.selection())['text']
+            self.nombre = self.tabla.item(self.tabla.selection())['values'][0]
+            self.duracion = self.tabla.item(self.tabla.selection())['values'][1]
+            self.genero = self.tabla.item(self.tabla.selection())['values'][2]
+
+            self.habilitar_campos()
+
+            self.entry_nombre.insert(0, self.nombre)
+            self.entry_duracion.insert(0, self.duracion)
+            self.entry_genero.insert(0, self.genero)
+        except BaseException as err:
+            mensaje = f'Descripcion del error : {err}'
+            messagebox.showwarning(titulo, mensaje)
+
+    def eliminar_datos(self):
+        titulo = 'Borrado de peliculas'
+        try:
+            self.id_pelicula = self.tabla.item(self.tabla.selection())['text']
+            eliminar(self.id_pelicula)
+
+            self.tabla_peliculas()
+            self.id_pelicula = None
+        except BaseException as err:
+            mensaje = f'Descripcion del error : {err}'
+            messagebox.showwarning(titulo, mensaje)
